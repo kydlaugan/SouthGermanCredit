@@ -1,25 +1,23 @@
-ul {
-    background-color: #0099f9;
-      display: flex;
-    justify-content: flex-end;
-    list-style-type: none;
-  }
+@import url('https://fonts.googleapis.com/css2?family=Rye&display=swap');
+:root{
+  --police:  'Rye', cursive;
   
-  ul li a {
-    color: #ffffff;
-      display: block;
-    font-size: 1.6rem;
-    padding: 1.5rem 1.6rem;
-    text-decoration: none;
-    transition: all, 0.1s;
-  }
-  
-  a:link, a:visited, a:hover, a:active {
-    color: #ffffff;
-      text-decoration: none;
-  }
-  
-  ul li a:hover {
-    background-color: #1589d1;
-      color: #ffffff;
-  }
+}
+*{
+    box-sizing: border-box;
+}
+.acceuil::before{
+    content: "";
+    position: absolute;
+    left: 0;
+    height: 95vh;
+    width: 100%;
+    z-index: -1;
+    background:linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(46,168,255,0.805742279822085) 0%, rgba(0,212,255,1) 100%) ;
+    filter: blur(4px) opacity(65%);
+    clip-path: polygon(30% 0%, 100% 0, 100% 54%, 80% 79%, 49% 92%, 0 100%, 0% 70%, 0 0);
+    
+}
+.titre{
+  font-family: var(--police);
+}

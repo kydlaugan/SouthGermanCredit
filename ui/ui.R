@@ -7,6 +7,7 @@ router <- make_router(
   route("ExtractionRegles", ExtractionRegles)
 )
 ui <- div( class="bg-transparent" ,
+           includeCSS("www/style.css"),
     tags$ul(class="flex flex-row space-x-11 font-mono text-base bg-blue-700 " ,
     tags$li(class =" m-2" , a(class ="p-0 text-white  " ,href = route_link("/"), "Acceuil")),
     tags$li(class =" m-2" ,a(class ="p-0 text-white " ,href = route_link("JeuDonnees"), "JeuDonnees")),
