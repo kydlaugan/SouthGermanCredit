@@ -26,7 +26,7 @@ Acceuil <- div(
            ),
            br(),br(),
            
-          div(class="mx-12" ,DT::dataTableOutput("table")),
+          div(class="mx-12 text-xs" ,DT::dataTableOutput("table")),
           br(),br(),
           #box pour lister les effectifs
           div(class="flex justify-between  mx-12",
@@ -40,8 +40,26 @@ Acceuil <- div(
           div(class="mt-24" ,
               p(class="text-center text-2xl underline  decoration-sky-500 decoration-double titre","Données Discretisées")
           ),
-          div(class="mx-12 text-sm" ,DT::dataTableOutput("tables")),
-          
+          div(class="mx-12 text-xs" ,DT::dataTableOutput("tables")),
+          #box pour lister les effectifs
+          br(),br(),
+          div(class="flex justify-between  mx-12",
+              tags$button(class="bg-blue-500 shadow-lg shadow-blue-500/50  p-2  hover:bg-sky-700 text-white rounded-lg shadow-2xl drop-shadow-2xl shadow-cyan-500/50 animate-bounce",
+                          p( class="titre text-4xl m-8","19"),"Attributs"),
+              tags$button(class="bg-blue-500 shadow-lg shadow-blue-500/50  p-2  hover:bg-sky-700 text-white rounded-lg shadow-2xl drop-shadow-2xl shadow-cyan-500/50 animate-bounce",
+                          p( class="titre text-4xl m-8","1,000"),"Valeurs Par Attributs"),
+              tags$button(class="bg-blue-500 shadow-lg shadow-blue-500/50  p-2  hover:bg-sky-700 text-white rounded-lg shadow-2xl drop-shadow-2xl shadow-cyan-500/50 animate-bounce",
+                          p( class="titre text-4xl m-8", "2"),"Attributs supprimés:","people_liable",br(),"other_installment_plans")
+          ) ,
+          div(class="mt-24" ,
+              p(class="text-center text-2xl underline  decoration-sky-500 decoration-double titre","Tableau De Fréquences de people_liable")
+          ),
+          div(class="mx-12 text-xs",
+              DT::dataTableOutput("table3" , height="300")
+              )
           
 )
+          
+          
+
 

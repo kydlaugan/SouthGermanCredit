@@ -25,12 +25,11 @@ server <- function(input , output, session) {
     nrow(donnee[!complete.cases(donnee),])
   })
   #suppression des attributs
-  donnee <- select(donnee,-c(people_liable,other_installment_plans))
-  data <- donnee
+  data <- select(donnee,-c(people_liable,other_installment_plans))
   dat <- donnee
   #discretisation des données
   #renommage des données
-  for (i in setdiff(1:19, c(2,4,5,13)))
+  for (i in setdiff(1:21, c(2,4,5,13)))
     dat[[i]] <- factor(dat[[i]])
   
   dat[[4]] <- factor(dat[[4]], levels=as.character(0:10))
@@ -99,6 +98,11 @@ server <- function(input , output, session) {
     "building soc. savings agr./life insurance", 
     "real estate"
   )
+  levels(dat$other_installment_plans) <- c(
+    "bank",
+    "stores",
+    "none"
+  )
   levels(dat$housing) <- c("for free", "rent", "own")
   dat$number_credits <- ordered(dat$number_credits)
   levels(dat$number_credits) <- c("1", "2-3", "4-5", ">= 6")
@@ -110,6 +114,7 @@ server <- function(input , output, session) {
     "skilled employee/official",
     "manager/self-empl./highly qualif. employee"
   )
+  levels(dat$people_liable) <- c("3 or more", "0 to 2")
   levels(dat$telephone) <- c("no", "yes (under customer name)")
   levels(dat$foreign_worker) <- c("yes", "no")
   
@@ -125,11 +130,19 @@ server <- function(input , output, session) {
          other_debtors = round(100*prop.table(xtabs(~other_debtors+credit_risk, dat),2),2),
          present_residence = round(100*prop.table(xtabs(~present_residence+credit_risk, dat),2),2),
          property = round(100*prop.table(xtabs(~property+credit_risk, dat),2),2),
+         other_installment_plans = round(100*prop.table(xtabs(~other_installment_plans+credit_risk, dat),2),2),
          housing = round(100*prop.table(xtabs(~housing+credit_risk, dat),2),2),
          number_credits = round(100*prop.table(xtabs(~number_credits+credit_risk, dat),2),2),
          job = round(100*prop.table(xtabs(~job+credit_risk, dat),2),2),
+         people_liable = round(100*prop.table(xtabs(~people_liable+credit_risk, dat),2),2),
          telephone = round(100*prop.table(xtabs(~telephone+credit_risk, dat),2),2),
          foreign_worker = round(100*prop.table(xtabs(~foreign_worker+credit_risk, dat),2),2))
+  
+  output$table3<- DT::renderDataTable(DT::datatable({
+    tabs$people_liable
+  })) 
+  
+  dat <- select(dat,-c(people_liable,other_installment_plans))
   output$tables<- DT::renderDataTable(DT::datatable({
     dat
   })) 
