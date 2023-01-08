@@ -1,6 +1,8 @@
+library(bslib)
 library(shiny)
 library(shiny.router)
-library(bslib)
+library(bsicons)
+library(dplyr)
 #chargement de l'interface
 source("ui/ui.R")  
 #chargement du server
