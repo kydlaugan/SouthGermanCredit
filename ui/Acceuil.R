@@ -1,4 +1,4 @@
-Acceuil <- div(
+Acceuil <- div( class="container" ,
            div(class = "flex flex-row acceuil",
                div(class = "basis-1/2 mt-32 ",
                    p(class = "ml-10 text-2xl text-sky-700",
