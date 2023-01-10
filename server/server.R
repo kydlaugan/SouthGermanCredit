@@ -167,5 +167,62 @@ server <- function(input , output, session) {
     plot(data[[input$feature1]],dat[[input$fit1]],xlab="Entree 1",ylab="Entree 2")
   })
   
+  
+  #regle d'association
+  
+  output$choose_columns <- renderUI({
+    checkboxGroupInput("cols", "Choose variables:", 
+                       choices  = colnames(data),
+                       selected = colnames(data)[1:19])
+  })
+  
+  rules <- reactive({
+    data$status=cut(data$status,breaks = 3)
+    dataduration=cut(data$duration,breaks = 3)
+    data$credit_history=cut(data$credit_history,breaks = 3)
+    data$purpose=cut(data$purpose,breaks = 3)
+    data$amount=cut(data$amount,breaks = 3)
+    data$savings=cut(data$savings,breaks = 3)
+    data$employment_duration=cut(data$employment_duration,breaks = 3)
+    data$installment_rate=cut(data$installment_rate,breaks = 3)
+    data$personal_status_sex=cut(data$personal_status_sex,breaks = 3)
+    data$other_debtors=cut(data$other_debtors,breaks = 3)
+    data$present_residence=cut(data$present_residence,breaks = 3)
+    data$property=cut(data$property,breaks = 3)
+    data$age=cut(data$age,breaks = 3)
+    data$housing=cut(data$housing,breaks = 3)
+    data$number_credits=cut(data$number_credits,breaks = 3)
+    data$job=cut(data$job,breaks = 3)
+    data$telephone=cut(data$telephone,breaks = 3)
+    data$foreign_worker=cut(data$foreign_worker,breaks = 3)
+    data$credit_risk=cut(data$credit_risk,breaks = 3)
+    tr <- as(data, 'transactions')
+    arAll <- apriori(tr, parameter=list(support=input$supp, confidence=input$conf, minlen=input$minL, maxlen=input$maxL))
+  }
+  )
+  
+  nR <- reactive({
+    nRule <- ifelse(input$samp == 'All Rules', length(rules()), input$nrule)
+  })
+  output$itemFreqPlot <- renderPlot({
+    trans <- as(data, 'transactions')
+    itemFrequencyPlot(trans,  cex.names=1)
+  }, height=800, width=800)
+  
+  output$rulesDataTable <- renderDataTable({
+    ar <- rules()
+    rulesdt <- as(ar,"data.frame")
+    rulesdt
+  })
+  
+  output$rulesTable <- renderPrint({
+    ar <- rules()
+    inspect(sort(ar, by=input$sort))
+  })
+  output$rulesPertinante <- renderPrint({
+    ar<- rules()
+    arr<-inspect(head(sort(ar, by='lift'),5))
+  })
+  
   router$server(input, output, session)
 }
