@@ -147,5 +147,25 @@ server <- function(input , output, session) {
     dat
   })) 
   
+  #generation de l'histogramme des attributs
+  output$hist <- renderPlot({
+    plot(hist(data[[input$features]]),xlab=paste(input$features), col="cyan",main="Histogram ")
+  }) 
+  
+  #summary
+  output$donne <- renderPrint({
+    summary(data)
+  })
+  
+  #boite à moustache
+  output$dis <- renderPlot({
+    boxplot(data[[input$feature]])
+  })
+  
+  #nuage de points
+  output$ndp <- renderPlot({
+    plot(data[[input$feature1]],dat[[input$fit1]],xlab="Entree 1",ylab="Entree 2")
+  })
+  
   router$server(input, output, session)
 }
