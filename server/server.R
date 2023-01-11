@@ -244,7 +244,7 @@ server <- function(input , output, session) {
   mc  <- table(donnee_test$credit_risk ,prediction )
   mce <- CrossTable(donnee_test$credit_risk , prediction)
   output$confusion1 <- renderPrint({
-    mce$t
+    mc
   })
   #taux de réussite 
   somme<- ((mc[1,1] + mc[2,2])/sum(mc))*100
@@ -273,5 +273,44 @@ server <- function(input , output, session) {
     (mc[2,2]/(mc[2,2]+mc[2,1]))*100
   })
   
+  
+  #methodes des k plus proches voisins
+  #on divise les données en donnees d'entrainement et de test
+  nt = sample(1:nrow(data),0.7*nrow(data))
+  data_train = data[nt,1:18]
+  data_test = data[-nt,1:18]
+  data_train_target = data[nt,19] 
+  data_train_test = data[-nt,19]
+  proche = knn(train = data_train , 
+               test = data_test ,
+               cl=data_train_target , 
+               k=round(sqrt(nrow(data))))
+  plot_predictions = data.frame( data_test$status, 
+                                 data_test$duration, data_test$credit_history, data_test$purpose, data_test$amount, 
+                                 data_test$savings, data_test$employment_duration, data_test$installment_rate,
+                                 data_test$personal_status_sex, data_test$other_debtors,
+                                 data_test$present_residence, data_test$property,
+                                 data_test$age,
+                                 data_test$housing, data_test$number_credits,
+                                 data_test$job, data_test$telephone, data_test$foreign_worker,
+                                 predicted=proche )
+  colnames(plot_predictions) <- c("status", "duration", "credit_history", "purpose", "amount", 
+                                  "savings", "employment_duration", "installment_rate",
+                                  "personal_status_sex", "other_debtors",
+                                  "present_residence", "property",
+                                  "age", 
+                                  "housing", "number_credits",
+                                  "job", "telephone", "foreign_worker",
+                                  "predicted")
+  
+  output$kppv <- renderPlot({
+    input$id_action
+    isolate(plot(ggplot(plot_predictions, aes(x=get(input$txt1),y=get(input$txt2),color=predicted,fill=predicted)) +
+                   geom_point(size=3)+
+                   ggtitle("Relations des predictions entre les deux variables choisies ")+
+                   theme(plot.title=element_text(hjust=0.5))+
+                   theme(legend.position="none"),xlab=paste(input$txt1)))
+    
+  })
   router$server(input, output, session)
 }

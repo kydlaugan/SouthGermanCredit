@@ -7,6 +7,10 @@ library(arules)
 library(rpart)
 library(rpart.plot)
 library(gmodels)
+library(class)
+library(ggplot2)
+library(gridExtra)
+library(factoextra)
 #chargement de l'interface
 source("ui/ui.R")  
 #chargement du server
