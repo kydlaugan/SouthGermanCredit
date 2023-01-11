@@ -4,6 +4,9 @@ library(shiny.router)
 library(bsicons)
 library(dplyr)
 library(arules)
+library(rpart)
+library(rpart.plot)
+library(gmodels)
 #chargement de l'interface
 source("ui/ui.R")  
 #chargement du server

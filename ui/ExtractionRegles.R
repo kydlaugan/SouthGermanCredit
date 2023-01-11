@@ -1,4 +1,4 @@
-ExtractionRegles <- div(
+ExtractionRegles <- div( class="text-xs",
     headerPanel("Regle d'association"),
     
     sidebarPanel(
@@ -15,8 +15,8 @@ ExtractionRegles <- div(
         sliderInput("supp", "Support:", min = 0, max = 1, value = 0.6, step = 1/10000), br(),
         sliderInput("conf", "Confidence:", min = 0, max = 1, value = 0.8 , step = 1/10000), br(),
         selectInput('sort', label='Sorting Criteria:', choices = c('lift', 'confidence', 'support')), br(), br(),
-        numericInput("minL", "Min. items per set:", 1), br(), 
-        numericInput("maxL", "Max. items per set::", 1), br(),
+        numericInput("minL", "Min. items per set:", 2), br(), 
+        numericInput("maxL", "Max. items per set:", 3), br(),
       )
       
     ),

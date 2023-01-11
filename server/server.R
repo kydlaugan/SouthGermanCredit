@@ -224,5 +224,54 @@ server <- function(input , output, session) {
     arr<-inspect(head(sort(ar, by='lift'),5))
   })
   
+  
+  #arbre de decision
+  #construction de l'arbre de décision 
+  jeu_decision <- dat
+  nbre_lignes <- floor((nrow(jeu_decision)*0.7))    
+  jeu_decision <- jeu_decision[sample(nrow(jeu_decision)) ,]
+  donnee_apprentissage <- jeu_decision[1:nbre_lignes , ]
+  donnee_test <- jeu_decision[(nbre_lignes+1):nrow(jeu_decision) , ] 
+  arbre <- rpart(credit_risk ~. , data = donnee_apprentissage)
+  output$decision <- renderPlot({
+    rpart.plot(arbre)
+  })
+  
+  
+ #validation du modèle
+  prediction <- predict(arbre , donnee_test[,-21] , type='class')
+  data.frame(donnee_test$credit_risk ,prediction)
+  mc  <- table(donnee_test$credit_risk ,prediction )
+  mce <- CrossTable(donnee_test$credit_risk , prediction)
+  output$confusion1 <- renderPrint({
+    mce$t
+  })
+  #taux de réussite 
+  somme<- ((mc[1,1] + mc[2,2])/sum(mc))*100
+  output$taux_reussite <-renderText({
+    somme
+  })
+  
+  #precision avec l'arbre de décision
+  output$precision1 <- renderText({
+    mc[1,1]/(mc[1,1]+mc[2,1])
+  })
+  output$precision1_1 <- renderText({
+    (mc[1,1]/(mc[1,1]+mc[2,1]))*100
+  })
+  output$precision2 <- renderText({
+    mc[2,2]/(mc[2,2]+mc[1,2])
+  })
+  output$precision2_2 <- renderText({
+    (mc[2,2]/(mc[2,2]+mc[1,2]))*100
+  })
+  #rappel avec l'arbre de decision
+  output$rappel1 <- renderText({
+    (mc[1,1]/(mc[1,1]+mc[1,2]))*100
+  })
+  output$rappel2 <- renderText({
+    (mc[2,2]/(mc[2,2]+mc[2,1]))*100
+  })
+  
   router$server(input, output, session)
 }
