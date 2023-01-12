@@ -1,4 +1,5 @@
-ExtractionRegles <- div( class="text-xs",
+ExtractionRegles <- div( class="text-xl mt-6",
+                         pageWithSidebar(               
     headerPanel("Regle d'association"),
     
     sidebarPanel(
@@ -30,4 +31,4 @@ ExtractionRegles <- div( class="text-xs",
       )
     )
     
-)
+))
