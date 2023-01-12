@@ -354,6 +354,7 @@ server <- function(input , output, session) {
     
   })
   
+  
   #methode svm
   donnee_svm <- donnee
   for (j in setdiff(1:21, c(2,4,5,13)))
@@ -388,8 +389,8 @@ server <- function(input , output, session) {
  # })
   #taux de réussite 
   
-  #reseau bayésien
   
+  #reseau bayésien
   set.seed(1)
   n = dim(dat)[1]
   index = sample(n, 0.7 * n)
