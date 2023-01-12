@@ -2,11 +2,14 @@ source("ui/Acceuil.R")
 source('ui/ExtractionRegles.R')
 source('ui/Analyse.R')
 source('ui/ClassSuper.R')
+source('ui/ClassNonSuper.R')
 router <- make_router(
   route("/", Acceuil),
   route("Analyse", Analyse),
   route("ExtractionRegles", ExtractionRegles),
-  route("ClassSuper", ClassSuper)
+  route("ClassSuper", ClassSuper),
+  route("ClassNonSuper", ClassNonSuper)
+  
   
 )
 ui <- div( class="bg-transparent" ,
@@ -15,7 +18,9 @@ ui <- div( class="bg-transparent" ,
     tags$li(class =" m-2" , a(class ="p-0 text-white  " ,href = route_link("/"), "Acceuil")),
     tags$li(class =" m-2" ,a(class ="p-0 text-white " ,href = route_link("Analyse"), "Analyse")),
     tags$li(class ="m-2" ,a(class ="p-0 text-white " ,href = route_link("ExtractionRegles"), "ExtractionRegles")) ,
-    tags$li(class ="m-2" ,a(class ="p-0 text-white " ,href = route_link("ClassSuper"), "ClassSuper"))
+    tags$li(class ="m-2" ,a(class ="p-0 text-white " ,href = route_link("ClassSuper"), "ClassSuper")) ,
+    tags$li(class ="m-2" ,a(class ="p-0 text-white " ,href = route_link("ClassNonSuper"), "ClassNonSuper"))
+    
     
   ) ,
   router$ui ,

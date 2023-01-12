@@ -410,5 +410,17 @@ server <- function(input , output, session) {
     tabcrosse <- CrossTable(Test.mod$credit_risk, Test.mod$CREDIT_RISK ,prop.chisq = FALSE, prop.t = FALSE, prop.r = FALSE)
   })
   
+  #methode des kmeans
+  output$cl <- renderPlot({
+    data_labels=dat$credit_risk
+    datas=data[1:18]
+    data_scale=scale(datas)
+    datas=dist(data_scale)
+    km.out = kmeans(data_scale,centers =input$n_cluster)
+    km.clusters = km.out$cluster
+    rownames(data_scale) = paste(dat$credit_risk,1:dim(dat)[1],sep="_")
+    fviz_cluster(list(data=data_scale ,cluster=km.clusters))
+  })
+  
   router$server(input, output, session)
 }

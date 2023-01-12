@@ -5,9 +5,9 @@ account: bl9dm2-kyd-laugan
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 7991996
-bundleId: 6709926
+bundleId: 6723962
 url: https://bl9dm2-kyd-laugan.shinyapps.io/SouthGermanCredit/
-when: 1673180988.85121
-lastSyncTime: 1673180988.85123
+when: 1673486483.82378
+lastSyncTime: 1673486483.82379
 asMultiple: FALSE
 asStatic: FALSE
