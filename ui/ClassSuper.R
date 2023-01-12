@@ -4,18 +4,22 @@ ClassSuper <- div(class="container",
                   div(class="flex flex-row text-xl",
                          plotOutput("decision" , height=800),
                       ),
-                  div(class="flex flex-row",
-                      div(class="basis-1/2",
+                  div(class="flex flex-row justify-center ",
+                      div(class="basis-full text-xs text-center",
                           verbatimTextOutput("confusion1"),
                           ),
-                      div(class="basis-1/2",
-                          p("Nous avons une Precision de   " , textOutput("precision1"), "pour les mauvais Credit_risk ce qui signifie que  ", textOutput("precision1_1") ,"des cas prédits par le modèle ont effectivement été jugé comme mauvais Credit_risk"),
-                          p("Nous avons une Precision de   " , textOutput("precision2"), "pour les bons Credit_risk ce qui signifie que  ", textOutput("precision2_2") ,"des cas prédits par le modèle ont effectivement été jugé comme bons Credit_risk"),
-                          p("C'est donc dire que  " , textOutput("rappel1"), "des cas de mauvais crédit ont été prédit avec pecision"),
-                          p("C'est donc dire que  " , textOutput("rappel2"), "des cas de bons crédit ont été prédit avec precision"),
-                          
-                      ),
                   ),
+                  
+                  #réseau de neuronnes
+                  p(class="text-center text-2xl underline  decoration-sky-500 decoration-double titre","Réseau de neuronne"),
+                  div(class="mx-12 flex flex-row mt-8",
+                      div(class="basis-1/2",
+                          imageOutput("neuronne"),
+                          ) ,
+                      div(class="basis_1/2",
+                          p(classs="mt-4","matrice de confusion")
+                          )
+                      ),
                   
                   
                   #methodes des k plus proches voisins
@@ -32,7 +36,15 @@ ClassSuper <- div(class="container",
                   div(class="basis-1/2",
                       plotOutput("kppv" )
                       )
-                  )
+                  ),
                   
+                #methome des svm
+                p(class="text-center text-2xl underline  decoration-sky-500 decoration-double titre mt-8","Methode des SVM"),
+                div(class="flex mt-8 justify-center ",
+                    div(class="basis-full text-xs text-center",
+                        verbatimTextOutput("confusion2"),
+                    ),
+                ),
+                
                   
 )

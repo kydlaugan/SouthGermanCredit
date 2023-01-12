@@ -11,6 +11,8 @@ library(class)
 library(ggplot2)
 library(gridExtra)
 library(factoextra)
+library(neuralnet)
+library(e1071)
 #chargement de l'interface
 source("ui/ui.R")  
 #chargement du server

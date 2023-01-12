@@ -244,7 +244,7 @@ server <- function(input , output, session) {
   mc  <- table(donnee_test$credit_risk ,prediction )
   mce <- CrossTable(donnee_test$credit_risk , prediction)
   output$confusion1 <- renderPrint({
-    mc
+    mcee <- CrossTable(donnee_test$credit_risk , prediction)
   })
   #taux de réussite 
   somme<- ((mc[1,1] + mc[2,2])/sum(mc))*100
@@ -271,6 +271,47 @@ server <- function(input , output, session) {
   })
   output$rappel2 <- renderText({
     (mc[2,2]/(mc[2,2]+mc[2,1]))*100
+  })
+  
+  #reseau de neuronnes
+  
+  # Random sampling
+  samplesize = 0.70 * nrow(data)
+  set.seed(80)
+  index = sample( seq_len ( nrow ( data ) ), size = samplesize )
+  
+  # Create training and test set
+  datatrain = data[ index, ]
+  datatest = data[ -index, ]
+  
+  ## Scale data for neural network
+  
+  max = apply(data , 2 , max)
+  min = apply(data, 2 , min)
+  scaled = as.data.frame(scale(data, center = min, scale = max - min))
+  # creating training and test set
+  trainNN = scaled[index , ]
+  testNN = scaled[-index , ]
+  levels(trainNN$credit_risk) <- c("bad", "good")
+  # fit neural network
+  set.seed(2)
+  NN = neuralnet(credit_risk ~ status + duration + credit_history + purpose + amount +
+                   savings + employment_duration + installment_rate +
+                   personal_status_sex + other_debtors +
+                   present_residence + property +
+                   age +
+                   housing + number_credits +
+                   job + telephone + foreign_worker , trainNN ,hidden = 3 , linear.output = T )
+ # plot(NN)
+  #file.remove('image/export.png')
+  #dev.print(device = png, file = "image/export.png", width = 600,height = 900)
+  #png(file = "out.png", width = 600, height = 900)
+  #plot(NN)
+  #dev.off()
+  output$neuronne <- renderImage({
+    list(src = "image/export.png",
+         width = 700,
+         height= 900)
   })
   
   
@@ -311,6 +352,52 @@ server <- function(input , output, session) {
                    theme(plot.title=element_text(hjust=0.5))+
                    theme(legend.position="none"),xlab=paste(input$txt1)))
     
+  })
+  
+  #methode svm
+  donnee_svm <- donnee
+  for (j in setdiff(1:21, c(2,4,5,13)))
+    donnee_svm[[j]] <- factor(donnee_svm[[j]])
+  
+  donnee_svm[[4]] <- factor(donnee_svm[[4]], levels=as.character(0:10))    
+  levels(donnee_svm$credit_risk) <- c("bad", "good")
+  #suppressioon de l'attribut
+  donnee_svm <- select(donnee_svm,-c(people_liable,other_installment_plans))
+  mymodel <- svm(credit_risk~. , donnee_svm)
+  summary(mymodel)
+  pred <- predict(mymodel , donnee_svm)
+  tab <- table(Predicted=pred , Actual = donnee_svm$credit_risk)
+  tabcros <- CrossTable(pred , donnee_svm$credit_risk)
+  
+  
+  output$confusion2 <- renderPrint({
+    tabcross <- CrossTable(pred , donnee_svm$credit_risk ,prop.chisq = FALSE, prop.t = FALSE, prop.r = FALSE)
+  })
+  #taux de réussite 
+  somme2 <- ((tab[1,1] + tab[2,2])/sum(tab))*100
+  output$taux_reussite2 <-renderText({
+    somme2
+  })
+  
+  #precision avec l'arbre de décision
+  output$precision3 <- renderText({
+    tab[1,1]/(tab[1,1]+tab[2,1])
+  })
+  output$precision3_3 <- renderText({
+    (tab[1,1]/(tab[1,1]+tab[2,1]))*100
+  })
+  output$precision4 <- renderText({
+    tab[2,2]/(tab[2,2]+tab[1,2])
+  })
+  output$precision4_4 <- renderText({
+    (tab[2,2]/(tab[2,2]+tab[1,2]))*100
+  })
+  #rappel avec l'arbre de decision
+  output$rappel3 <- renderText({
+    (tab[1,1]/(tab[1,1]+tab[1,2]))*100
+  })
+  output$rappel4 <- renderText({
+    (tab[2,2]/(tab[2,2]+tab[2,1]))*100
   })
   router$server(input, output, session)
 }
