@@ -46,5 +46,14 @@ ClassSuper <- div(class="container",
                     ),
                 ),
                 
+                #réseau bayésien naif
+                p(class="text-center text-2xl underline  decoration-sky-500 decoration-double titre mt-8","Reseau Bayésien naif"),
+                div(class="flex mt-8 justify-center ",
+                    div(class="basis-full text-xs text-center",
+                        verbatimTextOutput("confusion3"),
+                    ),
+                ),
+                
+                
                   
 )

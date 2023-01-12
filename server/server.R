@@ -363,41 +363,51 @@ server <- function(input , output, session) {
   levels(donnee_svm$credit_risk) <- c("bad", "good")
   #suppressioon de l'attribut
   donnee_svm <- select(donnee_svm,-c(people_liable,other_installment_plans))
-  mymodel <- svm(credit_risk~. , donnee_svm)
-  summary(mymodel)
-  pred <- predict(mymodel , donnee_svm)
-  tab <- table(Predicted=pred , Actual = donnee_svm$credit_risk)
-  tabcros <- CrossTable(pred , donnee_svm$credit_risk)
+  set.seed(1)
+  ne = dim(donnee_svm)[1]
+  indexe = sample(ne, 0.7 * ne)
+  Apprene = donnee_svm[indexe, ]
+  Teste = donnee_svm[-indexe, ]
   
-  
-  output$confusion2 <- renderPrint({
-    tabcross <- CrossTable(pred , donnee_svm$credit_risk ,prop.chisq = FALSE, prop.t = FALSE, prop.r = FALSE)
+  mymodel <- svm(credit_risk~. , data = Apprene)
+  #summary(mymodel)
+  pred <- predict(object = mymodel , newdata = Teste)
+  Teste.mod <- cbind(Teste, pred)
+  head(Teste.mod, 5)
+  tail(Teste.mod, 5)
+  output$confusion3 <- renderPrint({
+    tabcros <- CrossTable(Teste.mod$credit_risk, Teste.mod$pred ,prop.chisq = FALSE, prop.t = FALSE, prop.r = FALSE)
   })
+  
+  #tab <- table(Predicted=pred , Actual = donnee_svm$credit_risk)
+ # tabcros <- CrossTable(pred , donnee_svm$credit_risk)
+  
+  
+  #output$confusion2 <- renderPrint({
+  #  tabcross <- CrossTable(pred , donnee_svm$credit_risk ,prop.chisq = FALSE, prop.t = FALSE, prop.r = FALSE)
+ # })
   #taux de réussite 
-  somme2 <- ((tab[1,1] + tab[2,2])/sum(tab))*100
-  output$taux_reussite2 <-renderText({
-    somme2
+  
+  #reseau bayésien
+  
+  set.seed(1)
+  n = dim(dat)[1]
+  index = sample(n, 0.7 * n)
+  Appren = dat[index, ]
+  Test = dat[-index, ]
+  # Modélisation
+  nb.model <- naiveBayes(credit_risk ~ ., data = Appren)
+  nb.model
+  #La qualité du modèle dépend de sa capacité à bien classer dans le jeu de données test
+  CREDIT_RISK <- predict(object = nb.model, newdata = Test)
+  Test.mod <- cbind(Test, CREDIT_RISK)
+  head(Test.mod, 5)
+  tail(Test.mod, 5)
+  # Taux de bien classé
+  Confusion = table(Test.mod$credit_risk, Test.mod$CREDIT_RISK)
+  output$confusion2 <- renderPrint({
+    tabcrosse <- CrossTable(Test.mod$credit_risk, Test.mod$CREDIT_RISK ,prop.chisq = FALSE, prop.t = FALSE, prop.r = FALSE)
   })
   
-  #precision avec l'arbre de décision
-  output$precision3 <- renderText({
-    tab[1,1]/(tab[1,1]+tab[2,1])
-  })
-  output$precision3_3 <- renderText({
-    (tab[1,1]/(tab[1,1]+tab[2,1]))*100
-  })
-  output$precision4 <- renderText({
-    tab[2,2]/(tab[2,2]+tab[1,2])
-  })
-  output$precision4_4 <- renderText({
-    (tab[2,2]/(tab[2,2]+tab[1,2]))*100
-  })
-  #rappel avec l'arbre de decision
-  output$rappel3 <- renderText({
-    (tab[1,1]/(tab[1,1]+tab[1,2]))*100
-  })
-  output$rappel4 <- renderText({
-    (tab[2,2]/(tab[2,2]+tab[2,1]))*100
-  })
   router$server(input, output, session)
 }
